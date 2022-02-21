@@ -19,8 +19,6 @@ year_of_creation INTEGER NOT NULL
 );
 create table if not exists compilation (
 compilation_id SERIAL PRIMARY key, 
-track_id INTEGER NOT NULL REFERENCES track_list(track_id),
-album_id INTEGER NOT NULL REFERENCES albums(album_id),
 compilation_name VARCHAR(244) not null,
 year_of_creation INTEGER not NULL
 );
@@ -34,3 +32,9 @@ artist_id INTEGER references artist(artist_id),
 album_id INTEGER REFERENCES albums(album_id),
 constraint artists_albums primary key (artist_id,album_id)
 );
+create table if not exists compilation_tracks  (
+track_id INTEGER references track_list(track_id),
+compilation_id INTEGER REFERENCES compilation(compilation_id),
+constraint compilations_tracks primary key (track_id,compilation_id)
+);
+
