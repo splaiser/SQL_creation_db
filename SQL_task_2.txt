@@ -6,16 +6,16 @@ CREATE TABLE IF NOT EXISTS artist (
 artist_id SERIAL PRIMARY KEY,
 name VARCHAR(244) NOT NULL
 );
-CREATE TABLE IF NOT EXISTS track_list (
-track_id SERIAL PRIMARY KEY,
-track_name VARCHAR(244) NOT NULL,
-duration NUMERIC(244) NOT NULL
-);
 CREATE TABLE IF NOT EXISTS albums (
 album_id SERIAL PRIMARY KEY,
-track_id INTEGER NOT NULL REFERENCES track_list(track_id),
 album_name VARCHAR(244) NOT NULL,
 year_of_creation INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS track_list (
+track_id SERIAL PRIMARY KEY,
+album_id INTEGER NOT NULL REFERENCES albums(album_id),
+track_name VARCHAR(244) NOT NULL,
+duration NUMERIC(244) NOT NULL
 );
 create table IF NOT EXISTS compilation (
 compilation_id SERIAL PRIMARY KEY, 
