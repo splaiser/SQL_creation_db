@@ -5,10 +5,13 @@ select count(track_id) from track_list
 	where year_of_creation <= 2020 and year_of_creation >= 2019;
 select album_id,avg(duration) from track_list tl
 	group by album_id ;
-select artist.name from artist_albums  
-	join artist on artist_albums.artist_id = artist.artist_id 
-	join albums on artist_albums.album_id = albums.album_id 
-	where albums.year_of_creation not in (2020) ;
+select artist.name from artist
+	where artist.name not in (
+	select artist.name from artist
+	left join artist_albums on artist.artist_id = artist_albums.artist_id 
+	left join albums on albums.album_id = artist_albums.album_id 
+	where albums.year_of_creation = 2020)
+	order by artist.name
 select compilation_name from compilation_tracks  
 	join track_list on compilation_tracks.track_id  = track_list.track_id 
 	join compilation on compilation_tracks.compilation_id  = compilation.compilation_id
@@ -29,7 +32,11 @@ select track_name from compilation_tracks
 	where compilation.compilation_id is null;
 select track_name,duration from track_list tl
 	where duration  <= (select min(duration) from track_list tl2 );
-select albums.album_name,count(track_id) from track_list 
+select albums.album_name as albums, count(track_id) as track_count from track_list 
 	left join albums on track_list.album_id = albums.album_id
-	group by albums.album_name 
-	having count(track_id)  <= (select min(track_id) from track_list tl2 )	
+	group by albums
+	having count(track_id) = (select count(track_id) as track_count from track_list 
+	left join albums on track_list.album_id = albums.album_id
+	group by albums
+	order by track_count
+	limit 1)
